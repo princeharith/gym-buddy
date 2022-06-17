@@ -50,7 +50,10 @@ app.use(bodyParser.json());
 router.route('/test-create').post((req, res) => {
     const dbConnect = dbo.getDb();
     const exerciseDocument = {
+        user: req.body.user,
+        muscle_group: req.body.muscle_group,
         exercise: req.body.exercise,
+        reps: req.body.reps,
         intensity: req.body.intensity
     };
 
@@ -67,6 +70,34 @@ router.route('/test-create').post((req, res) => {
             }
         });
 });
+
+router.route('/update-reps').post((req, res) => {
+    const dbConnect = dbo.getDb();
+    const to_update = 
+    {
+        user: req.body.user,
+        muscle_group: req.body.muscle_group,
+        exercise: req.body.exercise,
+        intensity: req.body.intensity
+    }
+
+    const update = {
+        $set: {
+            reps: req.body.reps
+        }
+    }
+
+    dbConnect
+        .collection("exercises")
+        .updateOne(to_update, update, (err, result) => {
+            if (err) {
+                res.status(400).send("Error updating")
+            } else {
+                console.log('Updated!')
+                res.status(204).send()
+            }
+        })
+})
 
 //tell the app to use the router
 app.use(router);
