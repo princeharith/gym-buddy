@@ -22,7 +22,7 @@ module.exports = {
                 return callback(err)
             }
 
-            //connect to the "sample_airbnb" db
+            //connect to the "gym-buddy" database
             dbConnection = db.db("gym-buddy")
             console.log("Succesfully connected to MongoDB");
 

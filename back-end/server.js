@@ -16,50 +16,29 @@ const dbo = require('./db');
 //create an express router
 const router = express.Router();
 
-//takes in url endpoint, and callback (takes in request/result)
-router.get('/hello', (req, res, next) => {
-    res.send("Hello there");
-})
-
-router.get('/mustang', (req, res, next) => {
-    res.json("V8 Baby. Real American Muscle.")
-})
-
-router.get('/jonsky', (req, res) => {
-    res.json("Tren setter");
-})
-
-router.route('/test').get(async function (req, res) {
-    const dbConnect = dbo.getDb();
-    dbConnect
-        .collection('listingsAndReviews')
-        .find({})
-        .limit(50)
-        .toArray((err, _res) => {
-            if (err) {
-                res.status(400).send('Error fetching listings!')
-            } else {
-                res.json(_res)
-            }
-        })
-});
-
+//middleware items
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-router.route('/test-create').post((req, res) => {
+
+//api endpoint to create a new exercsie 
+router.route('/new-exercise').post((req, res) => {
+    //get the database
     const dbConnect = dbo.getDb();
+    //this is a "row" in our database
     const exerciseDocument = {
         user: req.body.user,
         muscle_group: req.body.muscle_group,
         exercise: req.body.exercise,
         reps: req.body.reps,
+        weight: req.body.weight,
         intensity: req.body.intensity
     };
 
-
     dbConnect
+        //choose the "exercises" table
         .collection("exercises")
+        //insert a row into the table
         .insertOne(exerciseDocument, (err, result) => {
             if (err) {
                 res.status(400).send("Error inserting exercise");
@@ -71,19 +50,54 @@ router.route('/test-create').post((req, res) => {
         });
 });
 
+//api endpoint to update reps
 router.route('/update-reps').post((req, res) => {
     const dbConnect = dbo.getDb();
+    //indicates which entry we are to change
     const to_update = 
     {
         user: req.body.user,
         muscle_group: req.body.muscle_group,
         exercise: req.body.exercise,
+        weight: req.body.weight,
         intensity: req.body.intensity
     }
-
+    //must use this to indicate what we are changing in the table
     const update = {
         $set: {
             reps: req.body.reps
+        }
+    }
+
+    dbConnect
+        .collection("exercises")
+        .updateOne(to_update, update, (err, result) => {
+            if (err) {
+                res.status(400).send("Error updating")
+            } else {
+                console.log('Updated!')
+                res.status(204).send()
+            }
+        })
+})
+
+
+//api endpoint to update the weight
+router.route('/update-weight').post((req, res) => {
+    const dbConnect = dbo.getDb();
+    //indicates which entry we are to change
+    const to_update = 
+    {
+        user: req.body.user,
+        muscle_group: req.body.muscle_group,
+        exercise: req.body.exercise,
+        reps: req.body.reps,
+        intensity: req.body.intensity
+    }
+    //must use this to indicate what we are changing in the table
+    const update = {
+        $set: {
+            weight: req.body.weight
         }
     }
 
@@ -108,6 +122,7 @@ app.use((err, req, res, next) => {
     res.status(500).send('Something broke.')
 })
 
+//connect to our database
 dbo.connectToServer((err) => {
     if(err){
         console.error(err);
