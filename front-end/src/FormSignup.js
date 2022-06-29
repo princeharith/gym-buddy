@@ -12,6 +12,8 @@ const FormSignup = () => {
         weight: 0
     })
 
+    const [selectedSplit, setSelectedSplit] = useState("");
+
     //const [weight, setWeight] = useState(0);
 
     const handleChange = e => {
@@ -25,6 +27,50 @@ const FormSignup = () => {
     const handleSubmit = e => {
         e.preventDefault();
     }
+
+    const changeSelectedSplitHandler = e => {
+        setSelectedSplit(e.target.value);
+        handleChange(e);
+    }
+
+    //Different Exercises
+    const pushDay = ["Incline DB Press", "Machine Chest Press", "Shoulder Fly", "Machine Tricep Dips"];
+
+    const pullDay = ["Pull ups", "Lat Pulldowns", "Rear Delt Fly", "Bicep Curls"];
+
+    const legDay = ["Hack Squat", "Leg Extensions", "Leg Curls", "Calf Raises"];
+
+    let type;
+    let options;
+
+    if (selectedSplit === "Push") {
+        type = pushDay;
+    } else if (selectedSplit === "Pull") {
+        type = pullDay;
+    } else if (selectedSplit === "Legs") {
+        type = legDay;
+    }
+
+    if (type) {
+        options = type.map((el) => <option key={el}>{el}</option>)
+    }
+
+    let default_exercise;
+
+    // if (options) {
+    //     default_exercise = options[0].key;
+    // } else {
+    //     default_exercise = "";
+    // }
+
+    options ? default_exercise = options[0].key : default_exercise = "";
+
+    useEffect(() => {
+        setValues({
+            ...values,
+            exercise: default_exercise
+        })
+    },[values.bodypart])
 
 
     return (
@@ -42,7 +88,7 @@ const FormSignup = () => {
                         placeholder="Push"
                         name="bodypart"
                         values={values.bodypart}
-                        onChange={handleChange}
+                        onChange={changeSelectedSplitHandler}
                     >
                             <option>Push</option>
                             <option>Pull</option>
@@ -50,7 +96,26 @@ const FormSignup = () => {
                     </select>
                 </div>
 
-                <div className="form-inputs">
+                <div className = "form-inputs">
+                    <label htmlFor="exercise"
+                    className="form-label">
+                        Please Select An Exercise
+                    </label>
+                    <select
+                        id="exercise"
+                        placeholder="Dumbell Incline Press"
+                        name="exercise"
+                        value={values.exercise}
+                        onChange={handleChange}
+
+                    >
+                        {
+                            options
+                        }
+                    </select>
+                </div>
+
+                {/* <div className="form-inputs">
                     <label htmlFor="exercise"
                     className="form-label">
                     Please Select An Exercise
@@ -68,7 +133,7 @@ const FormSignup = () => {
                             <option>Shoulder Fly</option>
                             <option>Machine Tricep Dips</option>
                     </select>
-                </div>
+                </div> */}
 
                 <div className="form-inputs">
                     <label htmlFor="reps"
@@ -98,9 +163,9 @@ const FormSignup = () => {
                         value={values.weight}
                         onChange={handleChange}
                     />
-                </div>
+                </div> 
             </form>
-            <div>
+             <div>
                 <h1>Testing the useState Hook</h1>
                 <h2>On the {values.exercise} on {values.bodypart} day, </h2>
                 <h2>you did {values.weight} pounds for {values.reps} reps!</h2>
