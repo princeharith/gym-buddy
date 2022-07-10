@@ -3,6 +3,8 @@ require('dotenv').config({path: './config.env'});
 const express = require('express');
 const { Db } = require('mongodb');
 const bodyParser = require('body-parser');
+const User = require("./models/user.js")
+const mongoose = require("mongoose");
 
 //create the app and PORT
 const app = express();
@@ -19,6 +21,52 @@ const router = express.Router();
 //middleware items
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+
+router.route('/register').post((req, res) => {
+    const dbConnect = dbo.getDb();
+    let new_user = new User ({
+        username: req.body.username,
+        password: req.body.password
+    });
+    console.log(new_user.password);
+    new_user.password = new_user.generateHash(new_user.password);
+    new_user.save();
+
+    dbConnect
+    //choose the "exercises" table
+    .collection("users-test")
+    //insert a row into the table
+    .insertOne(new_user, (err, result) => {
+        if (err) {
+            res.status(400).send("Error inserting user");
+        } else {
+            console.log(result);
+            console.log(`Added a new user: ${new_user.username}`)
+            res.status(204).send();
+        }
+    });
+})
+
+// app.post('/register', function(req, res) {
+//     var new_user = new User({
+//       username: req.username
+//     });
+  
+//     new_user.password = new_user.generateHash(userInfo.password);
+//     new_user.save();
+//   });
+  
+  app.post('/login', function(req, res) {
+    User.findOne({username: req.body.username}, function(err, user) {
+  
+      if (!user.validPassword(req.body.password)) {
+        //password did not match
+      } else {
+        console.log("success");
+      }
+    });
+  });
+
 
 
 //api endpoint to create a new exercsie 

@@ -1,5 +1,6 @@
 //require mongodb
 const { MongoClient} = require("mongodb");
+const { default: mongoose } = require("mongoose");
 require('dotenv').config({path: '.env'});
 
 const connectionString = process.env.ATLAS_URI
@@ -16,6 +17,9 @@ let dbConnection;
 //to export from a given file, to allow other files 
 module.exports = {
     connectToServer: function(callback) {
+        mongoose.connect(connectionString)
+        .catch(error => console.log(error));
+
         client.connect(function (err, db) {
             //if we encounter an error or there is no db
             if (err || !db) {
