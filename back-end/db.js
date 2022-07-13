@@ -17,6 +17,7 @@ let dbConnection;
 //to export from a given file, to allow other files 
 module.exports = {
     connectToServer: function(callback) {
+        //connect mongoose to the DB
         mongoose.connect(connectionString)
         .catch(error => console.log(error));
 

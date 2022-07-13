@@ -3,8 +3,9 @@ require('dotenv').config({path: './config.env'});
 const express = require('express');
 const { Db } = require('mongodb');
 const bodyParser = require('body-parser');
-const User = require("./models/user.js")
+const User = require("./models/user.js");
 const mongoose = require("mongoose");
+const cors = require('cors');
 
 //create the app and PORT
 const app = express();
@@ -21,6 +22,8 @@ const router = express.Router();
 //middleware items
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+app.use(cors())
+
 
 router.route('/register').post((req, res) => {
     const dbConnect = dbo.getDb();
@@ -33,7 +36,7 @@ router.route('/register').post((req, res) => {
     new_user.save();
 
     dbConnect
-    //choose the "exercises" table
+    //choose the "users-test" table
     .collection("users-test")
     //insert a row into the table
     .insertOne(new_user, (err, result) => {
@@ -47,25 +50,18 @@ router.route('/register').post((req, res) => {
     });
 })
 
-// app.post('/register', function(req, res) {
-//     var new_user = new User({
-//       username: req.username
+
+  
+//   app.post('/login', function(req, res) {
+//     User.findOne({username: req.body.username}, function(err, user) {
+  
+//       if (!user.validPassword(req.body.password)) {
+//         //password did not match
+//       } else {
+//         console.log("success");
+//       }
 //     });
-  
-//     new_user.password = new_user.generateHash(userInfo.password);
-//     new_user.save();
 //   });
-  
-  app.post('/login', function(req, res) {
-    User.findOne({username: req.body.username}, function(err, user) {
-  
-      if (!user.validPassword(req.body.password)) {
-        //password did not match
-      } else {
-        console.log("success");
-      }
-    });
-  });
 
 
 

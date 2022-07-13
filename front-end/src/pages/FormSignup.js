@@ -89,7 +89,10 @@ const FormSignup = () => {
     return (
         <div className="form-content-right">
             <form className='form' onSubmit={handleSubmit}>
-                <h1>Hello! Fill out the following info to start making gains</h1>
+                <h1>GymBuddy</h1>
+                <h3>Fill the form below to start making gains</h3>
+
+                <br />
 
                 <div className="form-inputs-test">
                     <label htmlFor='name'
@@ -101,7 +104,7 @@ const FormSignup = () => {
                     
                 </div>
 
-                <div className="form-inputs-dropdown">
+                <div className="form-inputs">
                     <label htmlFor="body-part"
                     className="form-label">
                     Choose The Split
@@ -120,7 +123,7 @@ const FormSignup = () => {
                     </select>
                 </div>
 
-                <div className = "form-inputs-dropdown">
+                <div className = "form-inputs">
                     <label htmlFor="exercise"
                     className="form-label">
                         Please Select An Exercise
