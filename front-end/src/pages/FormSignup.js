@@ -1,12 +1,14 @@
 import React from 'react';
 import {useState, useEffect} from 'react';
+import axios from 'axios';
 
 
 
 const FormSignup = () => {
 
     const [values, setValues] = useState({
-        bodypart: '',
+        name: '',
+        muscle_group: 'Push',
         exercise: '',
         reps: 0,
         weight: 0
@@ -14,7 +16,6 @@ const FormSignup = () => {
 
     const [selectedSplit, setSelectedSplit] = useState("");
 
-    //const [weight, setWeight] = useState(0);
 
     const handleChange = e => {
         setValues({
@@ -26,6 +27,18 @@ const FormSignup = () => {
 
     const handleSubmit = e => {
         e.preventDefault();
+        axios({
+            method: "post",
+            url: 'http://localhost:3000/new-exercise',
+            data: {
+                user: values.name,
+                muscle_group: values.muscle_group,
+                exercise: values.exercise,
+                reps: values.reps,
+                weight: values.weight,
+                intensity: "high"
+            }
+        })
     }
 
     const changeSelectedSplitHandler = e => {
@@ -40,7 +53,7 @@ const FormSignup = () => {
 
     const legDay = ["Hack Squat", "Leg Extensions", "Leg Curls", "Calf Raises"];
 
-    let type;
+    let type = pushDay;
     let options;
 
     if (selectedSplit === "Push") {
@@ -70,24 +83,35 @@ const FormSignup = () => {
             ...values,
             exercise: default_exercise
         })
-    },[values.bodypart])
+    },[values.muscle_group])
 
 
     return (
         <div className="form-content-right">
-            <form className='form'>
+            <form className='form' onSubmit={handleSubmit}>
                 <h1>Hello! Fill out the following info to start making gains</h1>
 
-                <div className="form-inputs">
+                <div className="form-inputs-test">
+                    <label htmlFor='name'
+                    className='form-label'>
+                        What's your name?
+                    </label>
+                    <br />
+                    <input type='text' name='name' className='name-box' onChange={handleChange}/>
+                    
+                </div>
+
+                <div className="form-inputs-dropdown">
                     <label htmlFor="body-part"
                     className="form-label">
                     Choose The Split
                     </label>
                     <select
                         id="body-part"
-                        placeholder="Push"
-                        name="bodypart"
-                        values={values.bodypart}
+                        placeholder="Select a split"
+                        name="muscle_group"
+                        className='select_split'
+                        value={values.muscle_group}
                         onChange={changeSelectedSplitHandler}
                     >
                             <option>Push</option>
@@ -96,7 +120,7 @@ const FormSignup = () => {
                     </select>
                 </div>
 
-                <div className = "form-inputs">
+                <div className = "form-inputs-dropdown">
                     <label htmlFor="exercise"
                     className="form-label">
                         Please Select An Exercise
@@ -115,26 +139,6 @@ const FormSignup = () => {
                     </select>
                 </div>
 
-                {/* <div className="form-inputs">
-                    <label htmlFor="exercise"
-                    className="form-label">
-                    Please Select An Exercise
-                    </label>
-                    <select
-                        id="exercise"
-                        placeholder="Dumbell Incline Press"
-                        name="exercise"
-                        value={values.exercise}
-                        onChange={handleChange}
-
-                    >
-                            <option>Dumbell Incline Press</option>
-                            <option>Chest Press</option>
-                            <option>Shoulder Fly</option>
-                            <option>Machine Tricep Dips</option>
-                    </select>
-                </div> */}
-
                 <div className="form-inputs">
                     <label htmlFor="reps"
                     className="form-label">
@@ -145,6 +149,7 @@ const FormSignup = () => {
                         type="text"
                         placeholder="8"
                         name="reps"
+                        className='input-box'
                         value={values.reps}
                         onChange={handleChange}
                     />
@@ -160,14 +165,19 @@ const FormSignup = () => {
                         type="text"
                         placeholder="0"
                         name="weight"
+                        className='input-box'
                         value={values.weight}
                         onChange={handleChange}
                     />
                 </div> 
+                <div className='button-container'>
+                    <input type="submit" />
+                </div>
             </form>
              <div>
                 <h1>Testing the useState Hook</h1>
-                <h2>On the {values.exercise} on {values.bodypart} day, </h2>
+                <h2>Hi, {values.name}!</h2>
+                <h2>On the {values.exercise} on {values.muscle_group} day, </h2>
                 <h2>you did {values.weight} pounds for {values.reps} reps!</h2>
             </div>
         </div>
