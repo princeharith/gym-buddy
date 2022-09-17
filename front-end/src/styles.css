@@ -1,4 +1,4 @@
-* {
+/* * {
     box-sizing: border-box;
     margin:10px 0;
     text-align: center;
@@ -12,11 +12,63 @@
 }
 
 
-
-
-
 input[type=text] {
     padding: 10px;
     margin:10px 0;
     box-shadow:0 0 15px 4px rgba(0,0,0,0.06);
+} */
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-size: large;
+    font-family: "Poppins", san-serif;
 }
+
+body {
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    background: gray;
+}
+
+.container {
+    max-width: 700px;
+    width: 100%;
+    background: white;
+    padding: 25px 30px;
+    border-radius: 5px;
+}
+
+.container .title {
+    font-size:  xx-large;
+    font-weight: 500;
+    position: relative;
+}
+
+.container .title::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 3px;
+    width: 30px;
+    background: grey;
+}
+
+.container .form-inputs {
+    padding:25px
+}
+
+.container .form-inputs .input-box {
+    margin: 5px;
+}
+
+.container .form-inputs select {
+    margin: 5px;
+}
+

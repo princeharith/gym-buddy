@@ -53,22 +53,27 @@ const FormSignup = () => {
 
     const legDay = ["Hack Squat", "Leg Extensions", "Leg Curls", "Calf Raises"];
 
-    let type = pushDay;
+    let split = pushDay;
     let options;
 
     if (selectedSplit === "Push") {
-        type = pushDay;
+        split = pushDay;
     } else if (selectedSplit === "Pull") {
-        type = pullDay;
+        split = pullDay;
     } else if (selectedSplit === "Legs") {
-        type = legDay;
+        split = legDay;
     }
 
-    if (type) {
-        options = type.map((el) => <option key={el}>{el}</option>)
+    if (split) {
+        options = split.map((el) => <option key={el}>{el}</option>)
     }
 
+    //the default exercise shown for the split (e.g, default for pushDay would be Incline DB)
     let default_exercise;
+
+
+    //this piece of code is the same as below, using the ternary operator 
+    options ? default_exercise = options[0].key : default_exercise = "";
 
     // if (options) {
     //     default_exercise = options[0].key;
@@ -76,113 +81,118 @@ const FormSignup = () => {
     //     default_exercise = "";
     // }
 
-    options ? default_exercise = options[0].key : default_exercise = "";
-
     useEffect(() => {
-        setValues({
-            ...values,
-            exercise: default_exercise
-        })
-    },[values.muscle_group])
+        setValues(values => ({...values, exercise: default_exercise}))
+    },[default_exercise])
 
 
     return (
-        <div className="form-content-right">
+        <div className="container">
+
+            <div className="title">SPOTR</div>
+
             <form className='form' onSubmit={handleSubmit}>
-                <h1>GymBuddy</h1>
-                <h3>Fill the form below to start making gains</h3>
 
-                <br />
+                <div className="user-details">
 
-                <div className="form-inputs-test">
-                    <label htmlFor='name'
-                    className='form-label'>
-                        What's your name?
-                    </label>
-                    <br />
-                    <input type='text' name='name' className='name-box' onChange={handleChange}/>
-                    
-                </div>
+                    <div className="form-inputs">
+                        {/* <label htmlFor='name'
+                        className='form-label'>
+                            What's your name?
+                        </label> */}
+                        <span class="details">What's Your Name?</span>
+                        <input type='text' 
+                        name='name' 
+                        className='input-box' 
+                        onChange={handleChange}/>
+                        
+                    </div>
 
-                <div className="form-inputs">
-                    <label htmlFor="body-part"
-                    className="form-label">
-                    Choose The Split
-                    </label>
-                    <select
-                        id="body-part"
-                        placeholder="Select a split"
-                        name="muscle_group"
-                        className='select_split'
-                        value={values.muscle_group}
-                        onChange={changeSelectedSplitHandler}
-                    >
-                            <option>Push</option>
-                            <option>Pull</option>
-                            <option>Legs</option>
-                    </select>
-                </div>
+                    <div className="form-inputs">
+                        {/* <label htmlFor="body-part"
+                        className="form-label">
+                        Choose The Split
+                        </label> */}
+                        <span class="details">Choose Your Split</span>
+                        <select
+                            id="body-part"
+                            placeholder="Select a split"
+                            name="muscle_group"
+                            className='select_split'
+                            value={values.muscle_group}
+                            onChange={changeSelectedSplitHandler}
+                        >
+                                <option>Push</option>
+                                <option>Pull</option>
+                                <option>Legs</option>
+                        </select>
+                    </div>
 
-                <div className = "form-inputs">
-                    <label htmlFor="exercise"
-                    className="form-label">
-                        Please Select An Exercise
-                    </label>
-                    <select
-                        id="exercise"
-                        placeholder="Dumbell Incline Press"
-                        name="exercise"
-                        value={values.exercise}
-                        onChange={handleChange}
+                    <div className = "form-inputs">
+                        {/* <label htmlFor="exercise"
+                        className="form-label">
+                            Please Select An Exercise
+                        </label> */}
+                        <span class="details">Choose The Exercise</span>
+                        <select
+                            id="exercise"
+                            placeholder="Dumbell Incline Press"
+                            name="exercise"
+                            value={values.exercise}
+                            onChange={handleChange}
 
-                    >
-                        {
-                            options
-                        }
-                    </select>
-                </div>
+                        >
+                            {
+                                options
+                            }
+                        </select>
+                    </div>
 
-                <div className="form-inputs">
-                    <label htmlFor="reps"
-                    className="form-label">
-                    </label>
-                    How Many Reps Did You Do?
-                    <input
-                        id="reps"
-                        type="text"
-                        placeholder="8"
-                        name="reps"
-                        className='input-box'
-                        value={values.reps}
-                        onChange={handleChange}
-                    />
-                </div>
+                    <div className="form-inputs">
+                        {/* <label htmlFor="reps"
+                        className="form-label">
+                        </label>
+                        How Many Reps Did You Do? */}
+                        <span class="details">How Many Reps?</span>
+                        <input
+                            id="reps"
+                            type="text"
+                            placeholder="8"
+                            name="reps"
+                            className='input-box'
+                            value={values.reps}
+                            onChange={handleChange}
+                        />
+                    </div>
 
-                <div className="form-inputs">
-                    <label htmlFor="weight"
-                    className="form-label">
-                    </label>
-                    How Much Weight Did You Do?
-                    <input
-                        id="weight"
-                        type="text"
-                        placeholder="0"
-                        name="weight"
-                        className='input-box'
-                        value={values.weight}
-                        onChange={handleChange}
-                    />
-                </div> 
-                <div className='button-container'>
-                    <input type="submit" />
+                    <div className="form-inputs">
+                        {/* <label htmlFor="weight"
+                        className="form-label">
+                        </label>
+                        How Much Weight Did You Do? */}
+                        <span class="details">How Much Weight?</span>
+                        <input
+                            id="weight"
+                            type="text"
+                            placeholder="0"
+                            name="weight"
+                            className='input-box'
+                            value={values.weight}
+                            onChange={handleChange}
+                        />
+                    </div> 
+                    <div className='button-container'>
+                        <input type="submit" />
+                    </div>
                 </div>
             </form>
-             <div>
+
+             {/* <div>
                 <h1>Testing the useState Hook</h1>
                 <h2>Hi, {values.name}!</h2>
                 <h2>On the {values.exercise} on {values.muscle_group} day, </h2>
                 <h2>you did {values.weight} pounds for {values.reps} reps!</h2>
-            </div>
+            </div> */}
         </div>
     )
 }

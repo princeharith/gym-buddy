@@ -31,7 +31,7 @@ router.route('/register').post((req, res) => {
         username: req.body.username,
         password: req.body.password
     });
-    console.log(new_user.password);
+    
     new_user.password = new_user.generateHash(new_user.password);
     new_user.save();
 
@@ -52,16 +52,16 @@ router.route('/register').post((req, res) => {
 
 
   
-//   app.post('/login', function(req, res) {
-//     User.findOne({username: req.body.username}, function(err, user) {
+  app.post('/login', function(req, res) {
+    User.findOne({username: req.body.username}, function(err, user) {
   
-//       if (!user.validPassword(req.body.password)) {
-//         //password did not match
-//       } else {
-//         console.log("success");
-//       }
-//     });
-//   });
+      if (!user.validPassword(req.body.password)) {
+        //password did not match
+      } else {
+        console.log("success");
+      }
+    });
+  });
 
 
 
