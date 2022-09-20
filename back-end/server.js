@@ -63,6 +63,8 @@ router.route('/register').post((req, res) => {
     });
   });
 
+  //api endpoint to provide business logic
+
 
 
 //api endpoint to create a new exercsie 
@@ -72,7 +74,7 @@ router.route('/new-exercise').post((req, res) => {
     //this is a "row" in our database
     const exerciseDocument = {
         user: req.body.user,
-        muscle_group: req.body.muscle_group,
+        muscle_group: req.body.split,
         exercise: req.body.exercise,
         reps: req.body.reps,
         weight: req.body.weight,

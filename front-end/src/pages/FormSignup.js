@@ -6,45 +6,62 @@ import axios from 'axios';
 
 const FormSignup = () => {
 
-    const [values, setValues] = useState({
-        name: '',
-        muscle_group: 'Push',
-        exercise: '',
-        reps: 0,
-        weight: 0
-    })
-
-    const [selectedSplit, setSelectedSplit] = useState("");
+    const [name, setName] = useState("");
+    const [split, setSplit] = useState("Push");
+    const [exercise, setExercise] = useState("");
+    const [reps, setReps] = useState(0);
+    const [weight, setWeight] = useState(0);
 
 
-    const handleChange = e => {
-        setValues({
-            ...values,
-            //in brackets since name of property unknown at runtime, refers to dynamic key name
-            [e.target.name]: e.target.value
-        })
+    // const handleChange = e => {
+    //     setValues({
+    //         ...values,
+    //         //in brackets since name of property unknown at runtime, refers to dynamic key name
+    //         [e.target.name]: e.target.value
+    //     })
+    // }
+
+    //is there an easier way to do this, instead of having handlers for each?
+    const changeNameHandler = e => {
+        setName(e.target.value);
     }
 
+    const changeSelectedSplitHandler = e => {
+        setSplit(e.target.value);
+    }
+
+    const changeExerciseHandler = e => {
+        setExercise(e.target.value);
+    }
+
+    const changeRepsHandler = e => {
+        setReps(e.target.value);
+    }
+
+    const changeWeightHandler = e => {
+        setWeight(e.target.value);
+    }
+    
     const handleSubmit = e => {
         e.preventDefault();
+        /**
+         * Add business logic here
+         */
         axios({
             method: "post",
             url: 'http://localhost:3000/new-exercise',
             data: {
-                user: values.name,
-                muscle_group: values.muscle_group,
-                exercise: values.exercise,
-                reps: values.reps,
-                weight: values.weight,
+                user: name,
+                split: split,
+                exercise: exercise,
+                reps: reps,
+                weight: weight,
                 intensity: "high"
             }
-        })
+        }).then(res => console.log(res.data));
     }
 
-    const changeSelectedSplitHandler = e => {
-        setSelectedSplit(e.target.value);
-        handleChange(e);
-    }
+
 
     //Different Exercises
     const pushDay = ["Incline DB Press", "Machine Chest Press", "Shoulder Fly", "Machine Tricep Dips"];
@@ -53,27 +70,26 @@ const FormSignup = () => {
 
     const legDay = ["Hack Squat", "Leg Extensions", "Leg Curls", "Calf Raises"];
 
-    let split = pushDay;
-    let options;
+    let list_of_exercises;
 
-    if (selectedSplit === "Push") {
-        split = pushDay;
-    } else if (selectedSplit === "Pull") {
-        split = pullDay;
-    } else if (selectedSplit === "Legs") {
-        split = legDay;
+    if (split === "Push") {
+        list_of_exercises = pushDay;
+    } else if (split === "Pull") {
+        list_of_exercises = pullDay;
+    } else if (split === "Legs") {
+        list_of_exercises = legDay;
     }
 
-    if (split) {
-        options = split.map((el) => <option key={el}>{el}</option>)
-    }
+
+    let options = list_of_exercises.map((el) => <option key={el}>{el}</option>)
+
 
     //the default exercise shown for the split (e.g, default for pushDay would be Incline DB)
-    let default_exercise;
+    let default_exercise = options[0].key
 
 
-    //this piece of code is the same as below, using the ternary operator 
-    options ? default_exercise = options[0].key : default_exercise = "";
+    //this piece of code is the same as below, using the ternary operator
+    // options ? default_exercise = options[0].key : default_exercise = "";
 
     // if (options) {
     //     default_exercise = options[0].key;
@@ -82,7 +98,7 @@ const FormSignup = () => {
     // }
 
     useEffect(() => {
-        setValues(values => ({...values, exercise: default_exercise}))
+        setExercise(default_exercise)
     },[default_exercise])
 
 
@@ -100,11 +116,11 @@ const FormSignup = () => {
                         className='form-label'>
                             What's your name?
                         </label> */}
-                        <span class="details">What's Your Name?</span>
+                        <span className="details">What's Your Name?</span>
                         <input type='text' 
                         name='name' 
                         className='input-box' 
-                        onChange={handleChange}/>
+                        onChange={changeNameHandler}/>
                         
                     </div>
 
@@ -113,13 +129,13 @@ const FormSignup = () => {
                         className="form-label">
                         Choose The Split
                         </label> */}
-                        <span class="details">Choose Your Split</span>
+                        <span className="details">Choose Your Split</span>
                         <select
                             id="body-part"
                             placeholder="Select a split"
-                            name="muscle_group"
+                            name="split"
                             className='select_split'
-                            value={values.muscle_group}
+                            value={split}
                             onChange={changeSelectedSplitHandler}
                         >
                                 <option>Push</option>
@@ -133,14 +149,13 @@ const FormSignup = () => {
                         className="form-label">
                             Please Select An Exercise
                         </label> */}
-                        <span class="details">Choose The Exercise</span>
+                        <span className="details">Choose The Exercise</span>
                         <select
                             id="exercise"
                             placeholder="Dumbell Incline Press"
                             name="exercise"
-                            value={values.exercise}
-                            onChange={handleChange}
-
+                            value={exercise}
+                            onChange={changeExerciseHandler}
                         >
                             {
                                 options
@@ -153,15 +168,15 @@ const FormSignup = () => {
                         className="form-label">
                         </label>
                         How Many Reps Did You Do? */}
-                        <span class="details">How Many Reps?</span>
+                        <span className="details">How Many Reps?</span>
                         <input
                             id="reps"
                             type="text"
                             placeholder="8"
                             name="reps"
                             className='input-box'
-                            value={values.reps}
-                            onChange={handleChange}
+                            value={reps}
+                            onChange={changeRepsHandler}
                         />
                     </div>
 
@@ -177,8 +192,8 @@ const FormSignup = () => {
                             placeholder="0"
                             name="weight"
                             className='input-box'
-                            value={values.weight}
-                            onChange={handleChange}
+                            value={weight}
+                            onChange={changeWeightHandler}
                         />
                     </div> 
                     <div className='button-container'>
@@ -186,13 +201,12 @@ const FormSignup = () => {
                     </div>
                 </div>
             </form>
-
-             {/* <div>
+             <div>
                 <h1>Testing the useState Hook</h1>
-                <h2>Hi, {values.name}!</h2>
-                <h2>On the {values.exercise} on {values.muscle_group} day, </h2>
-                <h2>you did {values.weight} pounds for {values.reps} reps!</h2>
-            </div> */}
+                <h2>Hi, {name}!</h2>
+                <h2>On the {exercise} on {split} day, </h2>
+                <h2>you did {weight} pounds for {reps} reps!</h2>
+            </div>
         </div>
     )
 }
